@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <style>
+    :root {
+      --brown-dark: #5c3a29;
+      --brown-mid:  #7b4a2d;
+      --gold:       #c9a84c;
+      --cream:      #f5ede3;
+    }
+    body { font-family: 'Poppins', sans-serif; }
+    .bg-brown      { background-color: var(--brown-dark) !important; }
+    .bg-brown-mid  { background-color: var(--brown-mid)  !important; }
+    .bg-cream      { background-color: var(--cream)      !important; }
+    .text-gold     { color: var(--gold)  !important; }
+    .text-brown    { color: var(--brown-dark) !important; }
+    .border-gold   { border-color: var(--gold) !important; }
+    .navbar-brand  { color: var(--gold) !important; }
+    .nav-link      { color: var(--cream) !important; }
+    .nav-link:hover, .nav-link.active { color: var(--gold) !important; }
+    .btn-gold      { background-color: var(--gold); color: var(--brown-dark); }
+    .btn-gold:hover { background-color: var(--brown-mid); color: white; }
+    .btn-brown     { background-color: var(--brown-dark); color: var(--gold); border: 1px solid var(--gold); }
+    .btn-brown:hover { background-color: var(--brown-mid); color: white; }
+    .menu-item {
+      margin-bottom: 30px;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+    }
+    #menumodal .btn-warning {
+      animation: pulse 2s infinite;
+    }
+    .menu-item {
+      background: #FFF8F0;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .menu-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    .menu-item img {
+      border-radius: 50%;
+      border: 3px solid #D3D3D3;
+    }
+    @keyframes pulse {
+      0%   { transform: scale(1);    background-color: #FFD700; }
+      50%  { transform: scale(1.05); background-color: #FFC700; }
+      100% { transform: scale(1);    background-color: #FFD700; }
+    }
+    .menu-item img {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .menu-item:hover img {
+      transform: scale(1.08);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+    .menu-item p {
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    #dropdown {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      max-height: 200px;
+      overflow-y: auto;
+      transition: opacity 0.2s ease;
+    }
+    #dropdown div:hover {
+      background-color: #f7e7d7;
+      cursor: pointer;
+    }
+    .cart-btn, .qty-btn {
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+    .cart-btn:hover, .qty-btn:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+    .toast {
+      animation: popToast 0.3s ease;
+    }
+    @keyframes popToast {
+      from { transform: scale(0.8); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-cream">
+<nav class="navbar navbar-expand-lg shadow-lg navbar-dark bg-brown" style="position:sticky; top:0; z-index:100;">
+  <div class="container-fluid">
+    <div class="d-flex align-items-center">
+      <a href="index.html" class="text-decoration-none me-3" style="color:#f5ede3; font-size: 1.5rem;">
+        &#8592;
+      </a>
+      <img src="https://i.postimg.cc/mkTnnqGq/Whats-App-Image-2026-04-20-at-23-47-02.jpg" alt="Logo"
+           style="height:40px; width:40px; border-radius:50%; object-fit: cover;">
+      <a class="navbar-brand fw-bold ms-2" href="#" style="color: #ffffff !important;">
+      Ayfah's Coffee
+      </a>
+    </div>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar" aria-controls="menuNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="menuNavbar">
+      <div class="mx-auto my-2 my-lg-0" style="width: 100%; max-width: 400px; position: relative;">
+        <input type="text" class="form-control" placeholder="Search Menu..." id="searchBar" oninput="searchMenu()">
+        <div id="dropdown" style="display:none; position:absolute; top:100%; left:0; width:100%; background:white; border:1px solid #ddd; border-radius:5px; z-index:9999;"></div>
+      </div>
+
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="menu.html">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="aboutus-1.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact-1.html">Contact</a></li>
+        
+        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+          <button class="btn btn-light position-relative" onclick="openCart()" style="color:var(--brown-dark);">
+            <i class="bi bi-cart3"></i>
+            <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">0</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="cart-sidebar" style="display:none; position:fixed; top:0; right:0; width:340px; height:100%; background:#F5E6D3; box-shadow:-8px 0 25px rgba(0,0,0,0.3); padding:20px; z-index:1000;">
+  <h4 style="color:#654321;">Your Cart</h4>
+  <hr>
+  <div id="cart-items"></div>
+  <hr>
+  <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:18px; color:#654321; margin-bottom:10px;">
+    <span>Total</span>
+    <span id="cart-total">Rs.0.00</span>
+  </div>
+  <hr>
+  <button class="btn btn-brown w-100" onclick="openForm()">Buy Now</button>
+  <button class="btn btn-brown w-100 mt-2" onclick="closeCart()">Close</button>
+</div>
+
+<div id="buy-form" style="display:none; position:fixed; top:0; left:0; background-color:#F5E6D3; padding:20px; height:100%; width:350px; box-shadow:2px 0 30px rgba(0,0,0,0.4); border-radius:0 15px 15px 0; border-top:6px solid #8B4513; z-index:9999; overflow-y:auto;">
+  <h3 style="color:#8B4513; text-align:center;">Complete Your Order</h3>
+  <p style="text-align:center; color:gray; font-size:14px;">Please fill in your details below</p>
+  <hr>
+  <form onsubmit="confirmOrder(); return false;">
+    <label style="color:brown; font-weight:bold;">Full Name</label>
+    <input type="text" class="form-control mb-3" placeholder="Enter your name" required>
+    <label style="color:brown; font-weight:bold;">Phone Number</label>
+    <input type="text" class="form-control mb-3" placeholder="Enter your phone number" required inputmode="numeric" pattern="[0-9]*">
+    <label style="color:brown; font-weight:bold;">Address</label>
+    <input type="text" class="form-control mb-3" placeholder="Enter your address" required>
+    <label style="color:brown; font-weight:bold;">Email</label>
+    <input type="email" class="form-control mb-3" placeholder="Enter your email" required>
+    <button type="submit" class="btn btn-brown w-100 mt-2">Proceed to Order</button>
+    <button type="button" class="btn btn-brown w-100 mt-2" onclick="closeForm()">Cancel</button>
+  </form>
+</div>
+
+<!--Main Menu Heading-->
+<div class="text-center py-5 bg-cream">
+
+  <h1 style="font-family:'Poppins', serif; font-size:60px; letter-spacing:2px;"
+      class="text-brown fw-bold">
+    MENU CARD
+  </h1>
+
+  <p class="text-brown mt-3 mb-4">
+    Fresh coffee • Tea • Breakfast • Desserts
+  </p>
+
+  <a href="#cappuccino-coffee" class="btn btn-brown px-4 py-2">
+    Explore Menu
+  </a>
+
+</div>
+
+<!--Coffee menu heading-->
+<div class="m-4 p-3 rounded-3 shadow-sm" style="background-color:#A47148;">
+  <h2 class="fw-bold text-center py-4" style="letter-spacing:3px; color:#3E2723;">COFFEE</h2>
+</div>
+
+<!--Coffee pictures-->
+<div class="container text-center">
+  <div class="row">
+
+    <div class="col-4 menu-item" id="cappuccino-coffee">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Cappuccino Coffee','Creamy cappuccino with velvety milk foam','https://i.pinimg.com/1200x/86/25/6c/86256c40a7797b222202baaac1797c26.jpg', 625)">
+          <img src="https://i.pinimg.com/1200x/86/25/6c/86256c40a7797b222202baaac1797c26.jpg" class="img-fluid object-fit-cover rounded-circle" style="aspect-ratio:1/1;" alt="CAPPUCCINO COFFEE">
+          <p style="color:#3E2723;">CAPPUCCINO COFFEE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="americano-coffee">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Americano Coffee','Bold espresso shots with hot water for a smooth and rich taste','https://i.pinimg.com/1200x/3b/52/83/3b5283eee030f544d760e5d0a0cd5619.jpg', 625)">
+          <img src="https://i.pinimg.com/1200x/3b/52/83/3b5283eee030f544d760e5d0a0cd5619.jpg" class="img-fluid object-fit-cover rounded-circle" style="aspect-ratio:1/1;" alt="AMERICANO COFFEE">
+          <p style="color:#3E2723;">AMERICANO COFFEE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="latte-coffee">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Latte Coffee','Smooth espresso with silky steamed milk and a light layer of foam','https://i.pinimg.com/1200x/26/ab/87/26ab87e0869e7cab25354ceddfb23127.jpg', 625)">
+          <img src="https://i.pinimg.com/1200x/26/ab/87/26ab87e0869e7cab25354ceddfb23127.jpg" class="img-fluid object-fit-cover rounded-circle" style="aspect-ratio:1/1;" alt="LATTE COFFEE">
+          <p style="color:#3E2723;">LATTE COFFEE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="cinnamon-coffee">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Cinnamon Coffee','Warm espresso blended with sweet cinnamon and creamy milk','https://i.pinimg.com/736x/1a/52/17/1a52174bc1bf2efc5d19346faf890d38.jpg', 625)">
+          <img src="https://i.pinimg.com/736x/1a/52/17/1a52174bc1bf2efc5d19346faf890d38.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="CINNAMON COFFEE">
+          <p style="color:#3E2723;">CINNAMON COFFEE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="espresso-coffee">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Espresso','Intense and concentrated coffee shot with a rich, bold flavor','https://i.pinimg.com/736x/7c/ff/92/7cff9259605cabc4cc2a9e9ee37018ea.jpg', 625)">
+          <img src="https://i.pinimg.com/736x/7c/ff/92/7cff9259605cabc4cc2a9e9ee37018ea.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="ESPRESSO COFFEE">
+          <p style="color:#3E2723;">ESPRESSO COFFEE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="black-coffee">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Black Coffee','Pure and simple dark roasted coffee with a bold, bitter taste','https://i.pinimg.com/736x/32/f9/e6/32f9e604c2259c8f89c78fd60d99fd5b.jpg', 450)">
+          <img src="https://i.pinimg.com/736x/32/f9/e6/32f9e604c2259c8f89c78fd60d99fd5b.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="BLACK COFFEE">
+          <p style="color:#3E2723;">BLACK COFFEE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="iced-latte-coffee">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Iced Latte','Chilled espresso with cold milk and ice for a refreshing creamy taste','https://i.pinimg.com/736x/74/8b/99/748b9925f39c6d40be19a21f40d66f07.jpg', 555)">
+          <img src="https://i.pinimg.com/736x/74/8b/99/748b9925f39c6d40be19a21f40d66f07.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="ICED LATTE COFFEE">
+          <p style="color:#3E2723;">ICED LATTE COFFEE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="mint-latte-coffee">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Mint Latte','Refreshing espresso with cool mint and smooth steamed milk','https://i.pinimg.com/736x/b6/05/f7/b605f744524db7f0204d79e59b526f88.jpg', 555)">
+          <img src="https://i.pinimg.com/736x/b6/05/f7/b605f744524db7f0204d79e59b526f88.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="MINT LATTE COFFEE">
+          <p style="color:#3E2723;">MINT LATTE COFFEE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="caramel-mocha-coffee">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Caramel Mocha','Rich espresso with chocolate, caramel drizzle and whipped cream','https://i.pinimg.com/736x/9c/2e/39/9c2e394016b4d262179bdd34b3269085.jpg', 555)">
+          <img src="https://i.pinimg.com/736x/9c/2e/39/9c2e394016b4d262179bdd34b3269085.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="CARAMEL MOCHA COFFEE">
+          <p style="color:#3E2723;">CARAMEL MOCHA COFFEE</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--Tea header-->
+<div class="m-4 p-3 rounded-3 shadow-sm" style="background-color:#A47148;">
+  <h2 class="fw-bold text-center py-4" style="letter-spacing:3px; color:#3b1f0e;">TEA</h2>
+</div>
+
+<!--Tea pictures-->
+<div class="container text-center">
+  <div class="row">
+
+    <div class="col-4 menu-item" id="doodh-patti-chai">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Doodh Patti','Traditional Pakistani tea simmered in pure milk with aromatic spices','https://i.pinimg.com/736x/99/60/f3/9960f3949108c016e1594a6cb55f1be3.jpg', 300)">
+          <img src="https://i.pinimg.com/736x/99/60/f3/9960f3949108c016e1594a6cb55f1be3.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="DOODH PATTI CHAI">
+          <p style="color:#3E2723;">DOODH PATTI CHAI</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="karak-chai">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Karak Chai','Strong spiced tea brewed with cardamom, saffron and condensed milk','https://i.pinimg.com/1200x/56/f6/e0/56f6e0c60b422eb33cee070cc4a025d5.jpg', 300)">
+          <img src="https://i.pinimg.com/1200x/56/f6/e0/56f6e0c60b422eb33cee070cc4a025d5.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="KARAK CHAI">
+          <p style="color:#3E2723;">KARAK CHAI</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="green-tea">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Green Tea','Light and refreshing green tea with a delicate earthy and grassy flavor','https://i.pinimg.com/736x/7b/6c/1f/7b6c1f4ebf405447445b16b27d17868e.jpg', 250)">
+          <img src="https://i.pinimg.com/736x/7b/6c/1f/7b6c1f4ebf405447445b16b27d17868e.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="GREEN TEA">
+          <p style="color:#3E2723;">GREEN TEA</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--Breakfast and Brunches heading-->
+<div class="m-4 p-3 rounded-3 shadow-sm" style="background-color:#A47148;">
+  <h2 class="fw-bold text-center" style="letter-spacing:3px; color:#3b1f0e;">BREAKFAST AND BRUNCHES</h2>
+</div>
+
+<!--Breakfast and brunches pictures-->
+<div class="container text-center">
+  <div class="row">
+
+    <div class="col-4 menu-item" id="fried-eggs">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Fried Eggs','Perfectly fried sunny side up eggs with a golden crispy edge','https://i.pinimg.com/736x/da/b4/5d/dab45d136d8572626ffb703bd68c2b61.jpg', 450)">
+          <img src="https://i.pinimg.com/736x/da/b4/5d/dab45d136d8572626ffb703bd68c2b61.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="FRIED EGGS">
+          <p style="color:#3E2723;">FRIED EGGS</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="omelette">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Omelette','Fluffy eggs folded with fresh vegetables, cheese and savory herbs','https://i.pinimg.com/736x/e2/91/23/e29123bfc4619c5f8f186b123b61389f.jpg', 490)">
+          <img src="https://i.pinimg.com/736x/e2/91/23/e29123bfc4619c5f8f186b123b61389f.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="OMELETTE">
+          <p style="color:#3E2723;">OMELETTE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="scrambled-eggs">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Scrambled Eggs','Soft and creamy eggs gently scrambled with butter and fresh herbs','https://i.pinimg.com/736x/f9/cb/c1/f9cbc113c473188398b6ef4207c78adc.jpg', 625)">
+          <img src="https://i.pinimg.com/736x/f9/cb/c1/f9cbc113c473188398b6ef4207c78adc.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="SCRAMBLED EGGS">
+          <p style="color:#3E2723;">SCRAMBLED EGGS</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="sandwich">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Sandwich','Freshly toasted bread layered with chicken, veggies and creamy sauce','https://i.pinimg.com/736x/01/0c/b0/010cb090073f035fa373185818c839f4.jpg', 530)">
+          <img src="https://i.pinimg.com/736x/01/0c/b0/010cb090073f035fa373185818c839f4.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="SANDWICH">
+          <p style="color:#3E2723;">SANDWICH</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="loaded-fries">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Loaded Fries','Crispy golden fries topped with cheese, jalapenos and creamy sauce','https://i.pinimg.com/736x/de/a3/15/dea31567b4a468587f4d5063f328a2c3.jpg', 550)">
+          <img src="https://i.pinimg.com/736x/de/a3/15/dea31567b4a468587f4d5063f328a2c3.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="LOADED FRIES">
+          <p style="color:#3E2723;">LOADED FRIES</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="french-toast">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('French Toast','Golden brioche dipped in egg custard served with maple syrup and berries','https://i.pinimg.com/736x/42/2b/a7/422ba7fbb7e1555da4c537f662317b88.jpg', 595)">
+          <img src="https://i.pinimg.com/736x/42/2b/a7/422ba7fbb7e1555da4c537f662317b88.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="FRENCH TOAST">
+          <p style="color:#3E2723;">FRENCH TOAST</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--Dessert heading-->
+<div class="m-4 p-3 rounded-3 shadow-sm" style="background-color:#A47148;">
+  <h2 class="fw-bold text-center py-4" style="letter-spacing:3px; color:#3b1f0e;">DESSERT</h2>
+</div>
+
+<!--Dessert pictures-->
+<div class="container text-center">
+  <div class="row">
+
+    <div class="col-4 menu-item" id="pancakes">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Pancakes','Fluffy stacked pancakes drizzled with maple syrup and fresh berries','https://i.pinimg.com/1200x/81/00/39/8100397ef3e98e13842711556d79d4e7.jpg', 600)">
+          <img src="https://i.pinimg.com/1200x/81/00/39/8100397ef3e98e13842711556d79d4e7.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="PANCAKES">
+          <p style="color:#3E2723;">PANCAKES</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="molten-cake">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Molten Chocolate Cake','Decadent dark chocolate cake with a rich flowing molten center','https://i.pinimg.com/1200x/86/29/20/862920ed4760b3bd6a24714cdb9f553a.jpg', 785)">
+          <img src="https://i.pinimg.com/1200x/86/29/20/862920ed4760b3bd6a24714cdb9f553a.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="MOLTEN CAKE">
+          <p style="color:#3E2723;">MOLTEN CAKE</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4 menu-item" id="lava-cake">
+      <div class="col-auto text-center">
+        <div class="d-flex flex-column align-items-center" role="button" data-bs-toggle="modal" data-bs-target="#menumodal"
+          onclick="openModal('Lava Cake','Warm chocolate cake with a gooey melted center served with vanilla ice cream','https://i.pinimg.com/736x/df/91/15/df9115d746533697591d7c37d93ccf8c.jpg', 695)">
+          <img src="https://i.pinimg.com/736x/df/91/15/df9115d746533697591d7c37d93ccf8c.jpg" class="img-fluid rounded-circle object-fit-cover" style="aspect-ratio:1/1;" alt="LAVA CAKE">
+          <p style="color:#3E2723;">LAVA CAKE</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="menumodal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 overflow-hidden border-0 shadow-lg">
+      <img id="modal-img" src="" alt="" class="w-100 object-fit-cover" style="height:200px;">
+      <div class="modal-body p-4">
+        <h5 class="fw-bold text-dark mb-1" id="modal-name"></h5>
+        <p class="text-muted small mb-3" id="modal-desc"></p>
+        <div class="d-flex justify-content-between align-items-center border-top pt-3 mb-4">
+          <span class="text-muted small">Price</span>
+          <span id="total-price" class="fw-bold fs-5 text-dark">Rs.0.00</span>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-dark rounded-3 w-100" onclick="addToCart()">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed bottom-0 start-50 translate-middle-x mb-4" style="z-index:9999;">
+  <div id="liveToast" class="toast text-bg-dark rounded-pill px-3" role="alert" aria-atomic="true">
+    <div class="toast-body fw-medium">✓ Added to cart successfully!</div>
+  </div>
+</div>
+
+<footer class="bg-brown text-center py-4 mt-2">
+    <p class="mb-0 text-gold">© 2025 Ayfah's Cafe · Made with ☕ and love</p>
+  </footer>
+
+<script>
+  const menuItems = [
+    { id: 'cappuccino-coffee',   name: 'Cappuccino Coffee',   desc: 'Creamy cappuccino with velvety milk foam',                                          img: 'https://i.pinimg.com/1200x/86/25/6c/86256c40a7797b222202baaac1797c26.jpg', price: 625 },
+    { id: 'americano-coffee',    name: 'Americano Coffee',    desc: 'Bold espresso shots with hot water for a smooth and rich taste',                     img: 'https://i.pinimg.com/1200x/3b/52/83/3b5283eee030f544d760e5d0a0cd5619.jpg', price: 625 },
+    { id: 'latte-coffee',        name: 'Latte Coffee',        desc: 'Smooth espresso with silky steamed milk and a light layer of foam',                  img: 'https://i.pinimg.com/1200x/26/ab/87/26ab87e0869e7cab25354ceddfb23127.jpg', price: 625 },
+    { id: 'cinnamon-coffee',     name: 'Cinnamon Coffee',     desc: 'Warm espresso blended with sweet cinnamon and creamy milk',                          img: 'https://i.pinimg.com/736x/1a/52/17/1a52174bc1bf2efc5d19346faf890d38.jpg', price: 625 },
+    { id: 'espresso-coffee',     name: 'Espresso Coffee',     desc: 'Intense and concentrated coffee shot with a rich, bold flavor',                      img: 'https://i.pinimg.com/736x/7c/ff/92/7cff9259605cabc4cc2a9e9ee37018ea.jpg', price: 625 },
+    { id: 'black-coffee',        name: 'Black Coffee',        desc: 'Pure and simple dark roasted coffee with a bold, bitter taste',                      img: 'https://i.pinimg.com/736x/32/f9/e6/32f9e604c2259c8f89c78fd60d99fd5b.jpg', price: 450 },
+    { id: 'iced-latte-coffee',   name: 'Iced Latte Coffee',   desc: 'Chilled espresso with cold milk and ice for a refreshing creamy taste',              img: 'https://i.pinimg.com/736x/74/8b/99/748b9925f39c6d40be19a21f40d66f07.jpg', price: 555 },
+    { id: 'mint-latte-coffee',   name: 'Mint Latte Coffee',   desc: 'Refreshing espresso with cool mint and smooth steamed milk',                         img: 'https://i.pinimg.com/736x/b6/05/f7/b605f744524db7f0204d79e59b526f88.jpg', price: 555 },
+    { id: 'caramel-mocha-coffee',name: 'Caramel Mocha Coffee',desc: 'Rich espresso with chocolate, caramel drizzle and whipped cream',                    img: 'https://i.pinimg.com/736x/9c/2e/39/9c2e394016b4d262179bdd34b3269085.jpg', price: 555 },
+    { id: 'doodh-patti-chai',    name: 'Doodh Patti Chai',   desc: 'Traditional Pakistani tea simmered in pure milk with aromatic spices',               img: 'https://i.pinimg.com/736x/99/60/f3/9960f3949108c016e1594a6cb55f1be3.jpg', price: 300 },
+    { id: 'karak-chai',          name: 'Karak Chai',          desc: 'Strong spiced tea brewed with cardamom, saffron and condensed milk',                 img: 'https://i.pinimg.com/1200x/56/f6/e0/56f6e0c60b422eb33cee070cc4a025d5.jpg', price: 300 },
+    { id: 'green-tea',           name: 'Green Tea',           desc: 'Light and refreshing green tea with a delicate earthy and grassy flavor',            img: 'https://i.pinimg.com/736x/7b/6c/1f/7b6c1f4ebf405447445b16b27d17868e.jpg', price: 250 },
+    { id: 'fried-eggs',          name: 'Fried Eggs',          desc: 'Perfectly fried sunny side up eggs with a golden crispy edge',                      img: 'https://i.pinimg.com/736x/da/b4/5d/dab45d136d8572626ffb703bd68c2b61.jpg', price: 450 },
+    { id: 'omelette',            name: 'Omelette',            desc: 'Fluffy eggs folded with fresh vegetables, cheese and savory herbs',                  img: 'https://i.pinimg.com/736x/e2/91/23/e29123bfc4619c5f8f186b123b61389f.jpg', price: 490 },
+    { id: 'scrambled-eggs',      name: 'Scrambled Eggs',      desc: 'Soft and creamy eggs gently scrambled with butter and fresh herbs',                  img: 'https://i.pinimg.com/736x/f9/cb/c1/f9cbc113c473188398b6ef4207c78adc.jpg', price: 625 },
+    { id: 'sandwich',            name: 'Sandwich',            desc: 'Freshly toasted bread layered with chicken, veggies and creamy sauce',               img: 'https://i.pinimg.com/736x/01/0c/b0/010cb090073f035fa373185818c839f4.jpg', price: 530 },
+    { id: 'loaded-fries',        name: 'Loaded Fries',        desc: 'Crispy golden fries topped with cheese, jalapenos and creamy sauce',                 img: 'https://i.pinimg.com/736x/de/a3/15/dea31567b4a468587f4d5063f328a2c3.jpg', price: 550 },
+    { id: 'french-toast',        name: 'French Toast',        desc: 'Golden brioche dipped in egg custard served with maple syrup and berries',           img: 'https://i.pinimg.com/736x/42/2b/a7/422ba7fbb7e1555da4c537f662317b88.jpg', price: 595 },
+    { id: 'pancakes',            name: 'Pancakes',            desc: 'Fluffy stacked pancakes drizzled with maple syrup and fresh berries',                img: 'https://i.pinimg.com/1200x/81/00/39/8100397ef3e98e13842711556d79d4e7.jpg', price: 600 },
+    { id: 'molten-cake',         name: 'Molten Chocolate Cake',desc:'Decadent dark chocolate cake with a rich flowing molten center',                     img: 'https://i.pinimg.com/1200x/86/29/20/862920ed4760b3bd6a24714cdb9f553a.jpg', price: 785 },
+    { id: 'lava-cake',           name: 'Lava Cake',           desc: 'Warm chocolate cake with a gooey melted center served with vanilla ice cream',       img: 'https://i.pinimg.com/736x/df/91/15/df9115d746533697591d7c37d93ccf8c.jpg', price: 695 },
+  ];
+
+  let cart = [];
+  let currentItem = null;
+
+  function openModal(name, desc, img, price) {
+    currentItem = { name, desc, img, price };
+    document.getElementById('modal-name').textContent = name;
+    document.getElementById('modal-desc').textContent = desc;
+    document.getElementById('modal-img').src = img;
+    document.getElementById('total-price').textContent = 'Rs.' + price.toFixed(2);
+  }
+
+  function addToCart() {
+    if (!currentItem) return;
+    const existing = cart.find(i => i.name === currentItem.name);
+    if (existing) { existing.qty++; }
+    else { cart.push({ ...currentItem, qty: 1 }); }
+    document.getElementById('cart-count').textContent = cart.reduce((a, i) => a + i.qty, 0);
+    bootstrap.Modal.getInstance(document.getElementById('menumodal')).hide();
+    new bootstrap.Toast(document.getElementById('liveToast'), { delay: 2500 }).show();
+  }
+
+  function openCart() {
+    const sidebar = document.getElementById('cart-sidebar');
+    sidebar.style.display = 'block';
+    renderCart();
+  }
+
+  function closeCart() {
+    document.getElementById('cart-sidebar').style.display = 'none';
+  }
+
+  function renderCart() {
+    const container = document.getElementById('cart-items');
+    if (cart.length === 0) {
+      container.innerHTML = '<p style="color:gray; text-align:center;">Your cart is empty!</p>';
+      document.getElementById('cart-total').textContent = 'Rs.0.00';
+      return;
+    }
+    let total = 0;
+    container.innerHTML = cart.map((item, i) => {
+      total += item.price * item.qty;
+      return `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:13px; color:#3E2723;">${item.name}</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button class="qty-btn" style="background:#8B4513; color:white; padding:2px 8px;" onclick="changeQty(${i},-1)">-</button>
+          <span>${item.qty}</span>
+          <button class="qty-btn" style="background:#8B4513; color:white; padding:2px 8px;" onclick="changeQty(${i},1)">+</button>
+          <span style="min-width:60px; text-align:right;">Rs.${(item.price * item.qty).toFixed(2)}</span>
+        </div>
+      </div>`;
+    }).join('');
+    document.getElementById('cart-total').textContent = 'Rs.' + total.toFixed(2);
+  }
+
+  function changeQty(index, delta) {
+    cart[index].qty += delta;
+    if (cart[index].qty <= 0) cart.splice(index, 1);
+    document.getElementById('cart-count').textContent = cart.reduce((a, i) => a + i.qty, 0);
+    renderCart();
+  }
+
+  function openForm() {
+    if (cart.length === 0) {
+      alert('Your cart is empty! Please add items first.');
+      return;
+    }
+    closeCart();
+    document.getElementById('buy-form').style.display = 'block';
+  }
+
+  function closeForm() {
+    document.getElementById('buy-form').style.display = 'none';
+  }
+
+  function confirmOrder() {
+  cart = [];
+  document.getElementById('cart-count').textContent = '0';
+  closeForm();
+  window.location.href = 'thankyou.html'; 
+}
+
+  function searchMenu() {
+    const query = document.getElementById('searchBar').value.toLowerCase().trim();
+    const dropdown = document.getElementById('dropdown');
+    if (!query) { dropdown.style.display = 'none'; return; }
+    const results = menuItems.filter(item => item.name.toLowerCase().includes(query));
+    if (results.length === 0) {
+      dropdown.innerHTML = '<div style="padding:10px; color:gray;">No results found</div>';
+    } else {
+      dropdown.innerHTML = results.map(item =>
+        `<div style="padding:10px; display:flex; align-items:center; gap:10px;"
+          onclick="selectItem('${item.id}', '${item.name}', '${item.desc}', '${item.img}', ${item.price})">
+          <img src="${item.img}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+          <span style="font-size:14px;">${item.name}</span>
+          <span style="margin-left:auto; font-size:13px; color:brown;">Rs.${item.price}</span>
+        </div>`
+      ).join('');
+    }
+    const bar = document.getElementById('searchBar');
+    const rect = bar.getBoundingClientRect();
+    dropdown.style.top = (rect.bottom + 5) + 'px';
+    dropdown.style.left = rect.left + 'px';
+    dropdown.style.width = rect.width + 'px';
+    dropdown.style.display = 'block';
+  }
+
+  function selectItem(id, name, desc, img, price) {
+  document.getElementById('searchBar').value = name;
+  document.getElementById('dropdown').style.display = 'none';
+
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  }
+</script>
+</body>
+</html>

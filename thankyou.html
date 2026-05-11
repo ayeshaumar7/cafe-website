@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Ayfah's Coffee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --brown-dark: #3b1f0e;
+            --gold:       #c9a84c;
+            --cream:      #f5ede3;
+            --sienna:     #a0522d; /* From your navbar */
+        }
+
+        body {
+            background-color: #270a03e7; /* Your main body background */
+            color: var(--brown-dark);
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .thank-you-card {
+            background-color: var(--cream);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 550px;
+            border: 2px solid var(--gold);
+        }
+
+        .coffee-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .btn-coffee {
+            background-color: var(--sienna);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 50px;
+            transition: 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .btn-coffee:hover {
+            background-color: var(--brown-dark);
+            color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .text-gold {
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container d-flex justify-content-center">
+        <div class="thank-you-card">
+            <div class="coffee-icon">☕</div>
+            
+            <h1 class="fw-bold mb-3" style="color: var(--brown-dark);">Thank You!</h1>
+            
+            <p class="lead mb-4">
+            Thanks a latte! Your order has been placed. We’re steaming ahead to make sure it’s perfect for you
+            </p>
+
+            <div style="height: 2px; background-color: var(--gold); width: 60px; margin: 20px auto;"></div>
+
+            <p class="mb-4">In the meantime, why not browse our latest blends?</p>
+            
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="index.html" class="btn btn-coffee shadow-sm">Back to Home</a>
+                <a href="menu.html" class="btn btn-coffee shadow-sm">View Menu</a>
+            </div>
+
+            <footer class="mt-5 small text-muted">
+                © 2025 Ayfah's Coffee · Where Every Sip Feels Like Home.
+            </footer>
+        </div>
+    </div>
+
+</body>
+</html>
